@@ -12,7 +12,7 @@ COPY requirements-docker.txt .
 RUN pip install --no-cache-dir -r requirements-docker.txt
 
 # 2) Copy the application and the saved model
-COPY app ./app
+COPY evidence/app ./app
 COPY model_artifacts ./model_artifacts
 RUN chmod -R a+rX /code
 
