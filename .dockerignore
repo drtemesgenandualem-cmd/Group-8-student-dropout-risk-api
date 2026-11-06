@@ -9,8 +9,7 @@ env.*
 .git/
 data/
 .DS_Store
-tests/
-evidence/
+tests
 examples/
 scripts/
 *.log
