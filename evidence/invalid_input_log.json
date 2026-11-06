@@ -1,0 +1,227 @@
+{
+  "recorded_at": "2026-11-04T15:26:05.616185+03:00",
+  "base_url": "http://127.0.0.1:8000",
+  "requests": [
+    {
+      "test": "missing_field",
+      "request": {
+        "Marital status": 2,
+        "Application mode": 3,
+        "Application order": 2,
+        "Course": 5,
+        "Daytime/evening attendance": 1,
+        "Previous qualification": 5,
+        "Nacionality": 5,
+        "Mother's qualification": 3,
+        "Father's qualification": 1,
+        "Mother's occupation": 2,
+        "Father's occupation": 3,
+        "Displaced": 0,
+        "Educational special needs": 1,
+        "Debtor": 1,
+        "Tuition fees up to date": 1,
+        "Gender": 1,
+        "Scholarship holder": 0,
+        "International": 0,
+        "Curricular units 1st sem (credited)": 5,
+        "Curricular units 1st sem (enrolled)": 2,
+        "Curricular units 1st sem (evaluations)": 2,
+        "Curricular units 1st sem (approved)": 0,
+        "Curricular units 1st sem (grade)": 10.6,
+        "Curricular units 1st sem (without evaluations)": 0,
+        "Unemployment rate": 7.6,
+        "Inflation rate": 0.5,
+        "GDP": -0.6
+      },
+      "status_code": 422,
+      "response": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "Age at enrollment"
+            ],
+            "msg": "Field required",
+            "input": {
+              "Marital status": 2,
+              "Application mode": 3,
+              "Application order": 2,
+              "Course": 5,
+              "Daytime/evening attendance": 1,
+              "Previous qualification": 5,
+              "Nacionality": 5,
+              "Mother's qualification": 3,
+              "Father's qualification": 1,
+              "Mother's occupation": 2,
+              "Father's occupation": 3,
+              "Displaced": 0,
+              "Educational special needs": 1,
+              "Debtor": 1,
+              "Tuition fees up to date": 1,
+              "Gender": 1,
+              "Scholarship holder": 0,
+              "International": 0,
+              "Curricular units 1st sem (credited)": 5,
+              "Curricular units 1st sem (enrolled)": 2,
+              "Curricular units 1st sem (evaluations)": 2,
+              "Curricular units 1st sem (approved)": 0,
+              "Curricular units 1st sem (grade)": 10.6,
+              "Curricular units 1st sem (without evaluations)": 0,
+              "Unemployment rate": 7.6,
+              "Inflation rate": 0.5,
+              "GDP": -0.6
+            }
+          }
+        ]
+      }
+    },
+    {
+      "test": "wrong_type",
+      "request": {
+        "Marital status": 2,
+        "Application mode": 3,
+        "Application order": 2,
+        "Course": 5,
+        "Daytime/evening attendance": 1,
+        "Previous qualification": 5,
+        "Nacionality": 5,
+        "Mother's qualification": 3,
+        "Father's qualification": 1,
+        "Mother's occupation": 2,
+        "Father's occupation": 3,
+        "Displaced": 0,
+        "Educational special needs": 1,
+        "Debtor": 1,
+        "Tuition fees up to date": 1,
+        "Gender": 1,
+        "Scholarship holder": 0,
+        "Age at enrollment": "young",
+        "International": 0,
+        "Curricular units 1st sem (credited)": 5,
+        "Curricular units 1st sem (enrolled)": 2,
+        "Curricular units 1st sem (evaluations)": 2,
+        "Curricular units 1st sem (approved)": 0,
+        "Curricular units 1st sem (grade)": 10.6,
+        "Curricular units 1st sem (without evaluations)": 0,
+        "Unemployment rate": 7.6,
+        "Inflation rate": 0.5,
+        "GDP": -0.6
+      },
+      "status_code": 422,
+      "response": {
+        "detail": [
+          {
+            "type": "int_type",
+            "loc": [
+              "body",
+              "Age at enrollment"
+            ],
+            "msg": "Input should be a valid integer",
+            "input": "young"
+          }
+        ]
+      }
+    },
+    {
+      "test": "out_of_range",
+      "request": {
+        "Marital status": 2,
+        "Application mode": 3,
+        "Application order": 2,
+        "Course": 5,
+        "Daytime/evening attendance": 1,
+        "Previous qualification": 5,
+        "Nacionality": 5,
+        "Mother's qualification": 3,
+        "Father's qualification": 1,
+        "Mother's occupation": 2,
+        "Father's occupation": 3,
+        "Displaced": 0,
+        "Educational special needs": 1,
+        "Debtor": 1,
+        "Tuition fees up to date": 1,
+        "Gender": 1,
+        "Scholarship holder": 0,
+        "Age at enrollment": 900,
+        "International": 0,
+        "Curricular units 1st sem (credited)": 5,
+        "Curricular units 1st sem (enrolled)": 2,
+        "Curricular units 1st sem (evaluations)": 2,
+        "Curricular units 1st sem (approved)": 0,
+        "Curricular units 1st sem (grade)": 10.6,
+        "Curricular units 1st sem (without evaluations)": 0,
+        "Unemployment rate": 7.6,
+        "Inflation rate": 0.5,
+        "GDP": -0.6
+      },
+      "status_code": 422,
+      "response": {
+        "detail": [
+          {
+            "type": "less_than_equal",
+            "loc": [
+              "body",
+              "Age at enrollment"
+            ],
+            "msg": "Input should be less than or equal to 70",
+            "input": 900,
+            "ctx": {
+              "le": 70
+            }
+          }
+        ]
+      }
+    },
+    {
+      "test": "invalid_category",
+      "request": {
+        "Marital status": 2,
+        "Application mode": 3,
+        "Application order": 2,
+        "Course": 999,
+        "Daytime/evening attendance": 1,
+        "Previous qualification": 5,
+        "Nacionality": 5,
+        "Mother's qualification": 3,
+        "Father's qualification": 1,
+        "Mother's occupation": 2,
+        "Father's occupation": 3,
+        "Displaced": 0,
+        "Educational special needs": 1,
+        "Debtor": 1,
+        "Tuition fees up to date": 1,
+        "Gender": 1,
+        "Scholarship holder": 0,
+        "Age at enrollment": 18,
+        "International": 0,
+        "Curricular units 1st sem (credited)": 5,
+        "Curricular units 1st sem (enrolled)": 2,
+        "Curricular units 1st sem (evaluations)": 2,
+        "Curricular units 1st sem (approved)": 0,
+        "Curricular units 1st sem (grade)": 10.6,
+        "Curricular units 1st sem (without evaluations)": 0,
+        "Unemployment rate": 7.6,
+        "Inflation rate": 0.5,
+        "GDP": -0.6
+      },
+      "status_code": 422,
+      "response": {
+        "detail": [
+          {
+            "type": "literal_error",
+            "loc": [
+              "body",
+              "Course"
+            ],
+            "msg": "Input should be 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 or 17",
+            "input": 999,
+            "ctx": {
+              "expected": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 or 17"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

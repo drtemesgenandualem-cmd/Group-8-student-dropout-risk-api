@@ -1,0 +1,12 @@
+{
+  "probability": 0.4128,
+  "risk_label": "high_risk",
+  "predicted_outcome": "Dropout",
+  "probabilities": {
+    "Dropout": 0.4128,
+    "Enrolled": 0.5583,
+    "Graduate": 0.0289
+  },
+  "threshold": 0.38,
+  "model_version": "1.0.0"
+}

@@ -1,0 +1,732 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Group 8 Student Dropout Prediction API",
+    "description": "Predict academic outcomes from 28 first-semester features. Flag Dropout when P(Dropout) >= 0.38; otherwise choose Enrolled or Graduate. Early-warning aid for human review. All input fields are required.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health",
+        "description": "A successful response means startup loaded and checked the model.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthOutput"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/predict": {
+      "post": {
+        "tags": [
+          "Prediction"
+        ],
+        "summary": "Predict",
+        "description": "Validate one student and apply the original Module 5 threshold rule.",
+        "operationId": "predict_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionOutput"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal prediction failure; no traceback is exposed."
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClassProbabilities": {
+        "properties": {
+          "Dropout": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Dropout"
+          },
+          "Enrolled": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Enrolled"
+          },
+          "Graduate": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Graduate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "Dropout",
+          "Enrolled",
+          "Graduate"
+        ],
+        "title": "ClassProbabilities"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthOutput": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "healthy",
+            "title": "Status"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "model_version"
+        ],
+        "title": "HealthOutput"
+      },
+      "PredictionInput": {
+        "properties": {
+          "Marital status": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "title": "Marital Status",
+            "description": "Marital status category code."
+          },
+          "Application mode": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18
+            ],
+            "title": "Application Mode",
+            "description": "Admission application mode category code."
+          },
+          "Application order": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              9
+            ],
+            "title": "Application Order",
+            "description": "Order of preference in the application (coded value)."
+          },
+          "Course": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17
+            ],
+            "title": "Course",
+            "description": "Degree course category code."
+          },
+          "Daytime/evening attendance": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Daytime/Evening Attendance",
+            "description": "Attendance: 1 daytime, 0 evening."
+          },
+          "Previous qualification": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17
+            ],
+            "title": "Previous Qualification",
+            "description": "Previous qualification category code."
+          },
+          "Nacionality": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "title": "Nacionality",
+            "description": "Nationality category code; original training spelling is required."
+          },
+          "Mother's qualification": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29
+            ],
+            "title": "Mother'S Qualification",
+            "description": "Mother qualification category code."
+          },
+          "Father's qualification": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34
+            ],
+            "title": "Father'S Qualification",
+            "description": "Father qualification category code."
+          },
+          "Mother's occupation": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32
+            ],
+            "title": "Mother'S Occupation",
+            "description": "Mother occupation category code."
+          },
+          "Father's occupation": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              20,
+              21,
+              23,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46
+            ],
+            "title": "Father'S Occupation",
+            "description": "Father occupation category code."
+          },
+          "Displaced": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Displaced",
+            "description": "Displaced student flag: 1 yes, 0 no."
+          },
+          "Educational special needs": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Educational Special Needs",
+            "description": "Special educational needs flag: 1 yes, 0 no."
+          },
+          "Debtor": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Debtor",
+            "description": "Debtor flag: 1 yes, 0 no."
+          },
+          "Tuition fees up to date": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Tuition Fees Up To Date",
+            "description": "Tuition fees current: 1 yes, 0 no."
+          },
+          "Gender": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Gender",
+            "description": "Dataset gender code: 1 male, 0 female."
+          },
+          "Scholarship holder": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "Scholarship Holder",
+            "description": "Scholarship holder flag: 1 yes, 0 no."
+          },
+          "Age at enrollment": {
+            "type": "integer",
+            "maximum": 70.0,
+            "minimum": 17.0,
+            "title": "Age At Enrollment",
+            "description": "Age in completed years at enrollment."
+          },
+          "International": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "title": "International",
+            "description": "International student flag: 1 yes, 0 no."
+          },
+          "Curricular units 1st sem (credited)": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 0.0,
+            "title": "Curricular Units 1St Sem (Credited)",
+            "description": "First semester curricular units: credited."
+          },
+          "Curricular units 1st sem (enrolled)": {
+            "type": "integer",
+            "maximum": 26.0,
+            "minimum": 0.0,
+            "title": "Curricular Units 1St Sem (Enrolled)",
+            "description": "First semester curricular units: enrolled."
+          },
+          "Curricular units 1st sem (evaluations)": {
+            "type": "integer",
+            "maximum": 45.0,
+            "minimum": 0.0,
+            "title": "Curricular Units 1St Sem (Evaluations)",
+            "description": "First semester curricular units: evaluations."
+          },
+          "Curricular units 1st sem (approved)": {
+            "type": "integer",
+            "maximum": 26.0,
+            "minimum": 0.0,
+            "title": "Curricular Units 1St Sem (Approved)",
+            "description": "First semester curricular units: approved."
+          },
+          "Curricular units 1st sem (grade)": {
+            "type": "number",
+            "maximum": 18.875,
+            "minimum": 0.0,
+            "title": "Curricular Units 1St Sem (Grade)",
+            "description": "First semester mean grade on the dataset 0\u201320 scale."
+          },
+          "Curricular units 1st sem (without evaluations)": {
+            "type": "integer",
+            "maximum": 12.0,
+            "minimum": 0.0,
+            "title": "Curricular Units 1St Sem (Without Evaluations)",
+            "description": "First semester curricular units: without evaluations."
+          },
+          "Unemployment rate": {
+            "type": "number",
+            "maximum": 16.2,
+            "minimum": 7.6,
+            "title": "Unemployment Rate",
+            "description": "Contextual unemployment rate in percent."
+          },
+          "Inflation rate": {
+            "type": "number",
+            "maximum": 3.7,
+            "minimum": -0.8,
+            "title": "Inflation Rate",
+            "description": "Contextual inflation rate in percent."
+          },
+          "GDP": {
+            "type": "number",
+            "maximum": 3.51,
+            "minimum": -4.06,
+            "title": "Gdp",
+            "description": "Contextual GDP growth rate in percent."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "Marital status",
+          "Application mode",
+          "Application order",
+          "Course",
+          "Daytime/evening attendance",
+          "Previous qualification",
+          "Nacionality",
+          "Mother's qualification",
+          "Father's qualification",
+          "Mother's occupation",
+          "Father's occupation",
+          "Displaced",
+          "Educational special needs",
+          "Debtor",
+          "Tuition fees up to date",
+          "Gender",
+          "Scholarship holder",
+          "Age at enrollment",
+          "International",
+          "Curricular units 1st sem (credited)",
+          "Curricular units 1st sem (enrolled)",
+          "Curricular units 1st sem (evaluations)",
+          "Curricular units 1st sem (approved)",
+          "Curricular units 1st sem (grade)",
+          "Curricular units 1st sem (without evaluations)",
+          "Unemployment rate",
+          "Inflation rate",
+          "GDP"
+        ],
+        "title": "PredictionInput",
+        "description": "All 28 end-of-first-semester inputs are required; use original CSV keys.",
+        "examples": [
+          {
+            "Age at enrollment": 18,
+            "Application mode": 3,
+            "Application order": 2,
+            "Course": 5,
+            "Curricular units 1st sem (approved)": 0,
+            "Curricular units 1st sem (credited)": 5,
+            "Curricular units 1st sem (enrolled)": 2,
+            "Curricular units 1st sem (evaluations)": 2,
+            "Curricular units 1st sem (grade)": 10.6,
+            "Curricular units 1st sem (without evaluations)": 0,
+            "Daytime/evening attendance": 1,
+            "Debtor": 1,
+            "Displaced": 0,
+            "Educational special needs": 1,
+            "Father's occupation": 3,
+            "Father's qualification": 1,
+            "GDP": -0.6,
+            "Gender": 1,
+            "Inflation rate": 0.5,
+            "International": 0,
+            "Marital status": 2,
+            "Mother's occupation": 2,
+            "Mother's qualification": 3,
+            "Nacionality": 5,
+            "Previous qualification": 5,
+            "Scholarship holder": 0,
+            "Tuition fees up to date": 1,
+            "Unemployment rate": 7.6
+          }
+        ]
+      },
+      "PredictionOutput": {
+        "properties": {
+          "probability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Probability",
+            "description": "Dropout probability."
+          },
+          "risk_label": {
+            "type": "string",
+            "enum": [
+              "high_risk",
+              "low_risk"
+            ],
+            "title": "Risk Label"
+          },
+          "predicted_outcome": {
+            "type": "string",
+            "enum": [
+              "Dropout",
+              "Enrolled",
+              "Graduate"
+            ],
+            "title": "Predicted Outcome"
+          },
+          "probabilities": {
+            "$ref": "#/components/schemas/ClassProbabilities"
+          },
+          "threshold": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Threshold"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "probability",
+          "risk_label",
+          "predicted_outcome",
+          "probabilities",
+          "threshold",
+          "model_version"
+        ],
+        "title": "PredictionOutput"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
