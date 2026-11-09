@@ -12,19 +12,21 @@ COPY requirements-docker.txt .
 RUN pip install --no-cache-dir -r requirements-docker.txt
 
 # 2) Copy the application and the saved model
-COPY evidence/app ./app
+COPY app ./app
 COPY model_artifacts ./model_artifacts
 RUN chmod -R a+rX /code
 
 # 3) Do not run as root inside the container
-RUN useradd --create-home appuser
+RUN useradd --create-home appuser \
+ && mkdir -p /code/logs && chown appuser /code/logs
 USER appuser
 
 EXPOSE 8000
 
-# Docker calls /health to see whether the service is working
+# Docker calls /health to see whether the service is working (same port as the API)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+  CMD python -c "import os, urllib.request; urllib.request.urlopen('http://localhost:%s/health' % os.environ.get('PORT', '8000'))" || exit 1
 
+# Cloud platforms pass the port in the PORT variable; locally it falls back to 8000.
 # --host 0.0.0.0 lets traffic from outside the container reach the API
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
